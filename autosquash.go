@@ -56,6 +56,10 @@ func main() {
 	}
 
 	gitArguments := []string{"rebase", "--autosquash", "-i", fmt.Sprintf("%s", upstreamParentCommit.Hash)}
+	if len(os.Args) > 1 {
+		gitArguments = append(gitArguments, os.Args[1:]...)
+	}
+
 	printf("Executing git %s", strings.Join(gitArguments, " "))
 	command := exec.Command("git", gitArguments...)
 	command.Stdin = os.Stdin
