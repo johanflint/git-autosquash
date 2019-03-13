@@ -12,6 +12,7 @@ import (
 )
 
 const fixupPrefix = "fixup!"
+const squashPrefix = "squash!"
 
 func main() {
 	repository, err := git.PlainOpenWithOptions(".", &git.PlainOpenOptions{DetectDotGit: true})
@@ -32,8 +33,8 @@ func main() {
 			return storer.ErrStop
 		}
 
-		if strings.HasPrefix(commit.Message, fixupPrefix) {
-			messageWithoutPrefix := strings.TrimLeft(strings.TrimPrefix(commit.Message, fixupPrefix), " ")
+		if strings.HasPrefix(commit.Message, fixupPrefix) || strings.HasPrefix(commit.Message, squashPrefix) {
+			messageWithoutPrefix := trimPrefix(commit.Message)
 			autosquashCommitMessages = append(autosquashCommitMessages, messageWithoutPrefix)
 		}
 
@@ -45,7 +46,7 @@ func main() {
 	})
 
 	if len(autosquashCommitMessages) == 0 {
-		printf("Nothing to autosquash: no commits found that start with %s", fixupPrefix)
+		printf("Nothing to autosquash: no commits found that start with %s or %s", fixupPrefix, squashPrefix)
 		return
 	}
 
@@ -70,6 +71,13 @@ func main() {
 
 func printf(format string, args ...interface{}) {
 	fmt.Printf("%s\n", fmt.Sprintf(format, args...))
+}
+
+func trimPrefix(commitMessage string) string {
+	trimmed := strings.TrimPrefix(commitMessage, fixupPrefix)
+	trimmed = strings.TrimPrefix(trimmed, squashPrefix)
+
+	return strings.TrimLeft(trimmed, " ")
 }
 
 func matchesAutosquashCommit(commit *object.Commit, autosquashCommitMessages []string) bool {

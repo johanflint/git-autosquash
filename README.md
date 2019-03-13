@@ -18,7 +18,7 @@ Instead of calling `rebase` manually with the correct target commit, `autosquash
 
 ## Usage
 
-Run `autosquash` in any git repository that has commits to fixup. Any command line arguments passed to `autosquash` are passed to `git rebase`.
+Run `autosquash` in any git repository that has commits to fixup or squash. Any command line arguments passed to `autosquash` are passed to `git rebase`.
 
 ## License
 
