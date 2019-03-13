@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 	"strings"
 
 	"gopkg.in/src-d/go-git.v4"
@@ -55,6 +57,11 @@ func main() {
 
 	gitArguments := []string{"rebase", "--autosquash", "-i", fmt.Sprintf("%s", upstreamParentCommit.Hash)}
 	printf("Executing git %s", strings.Join(gitArguments, " "))
+	command := exec.Command("git", gitArguments...)
+	command.Stdin = os.Stdin
+	command.Stdout = os.Stdout
+	command.Stderr = os.Stderr
+	command.Run()
 }
 
 func printf(format string, args ...interface{}) {
