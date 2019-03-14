@@ -34,7 +34,7 @@ func main() {
 		}
 
 		if strings.HasPrefix(commit.Message, fixupPrefix) || strings.HasPrefix(commit.Message, squashPrefix) {
-			messageWithoutPrefix := trimPrefix(commit.Message)
+			messageWithoutPrefix := commitTitle(trimPrefix(commit.Message))
 			autosquashCommitMessages = append(autosquashCommitMessages, messageWithoutPrefix)
 		}
 
@@ -71,6 +71,10 @@ func main() {
 
 func printf(format string, args ...interface{}) {
 	fmt.Printf("%s\n", fmt.Sprintf(format, args...))
+}
+
+func commitTitle(commitMessage string) string {
+	return strings.Split(strings.ReplaceAll(commitMessage, "\r\n", "\n"), "\n")[0]
 }
 
 func trimPrefix(commitMessage string) string {
