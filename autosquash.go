@@ -33,13 +33,13 @@ func main() {
 			return storer.ErrStop
 		}
 
+		if matchesAutosquashCommit(commit, autosquashCommitMessages) {
+			upstreamCommit = commit
+		}
+
 		if strings.HasPrefix(commit.Message, fixupPrefix) || strings.HasPrefix(commit.Message, squashPrefix) {
 			messageWithoutPrefix := commitTitle(trimPrefix(commit.Message))
 			autosquashCommitMessages = append(autosquashCommitMessages, messageWithoutPrefix)
-		}
-
-		if matchesAutosquashCommit(commit, autosquashCommitMessages) {
-			upstreamCommit = commit
 		}
 
 		return nil
