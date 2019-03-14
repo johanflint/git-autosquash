@@ -33,7 +33,7 @@ func main() {
 			return storer.ErrStop
 		}
 
-		if matchesAutosquashCommit(commit, autosquashCommitMessages) {
+		if matchesAutosquashCommit(commit.Message, autosquashCommitMessages) {
 			upstreamCommit = commit
 		}
 
@@ -84,9 +84,9 @@ func trimPrefix(commitMessage string) string {
 	return strings.TrimLeft(trimmed, " ")
 }
 
-func matchesAutosquashCommit(commit *object.Commit, autosquashCommitMessages []string) bool {
-	for _, commitMessage := range autosquashCommitMessages {
-		if strings.Contains(commit.Message, commitMessage) {
+func matchesAutosquashCommit(commitMessage string, autosquashCommitMessages []string) bool {
+	for _, autosquashCommitMessage := range autosquashCommitMessages {
+		if strings.Contains(commitMessage, autosquashCommitMessage) {
 			return true
 		}
 	}
