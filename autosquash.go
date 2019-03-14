@@ -33,13 +33,13 @@ func main() {
 			return storer.ErrStop
 		}
 
+		if matchesAutosquashCommit(commit.Message, autosquashCommitMessages) {
+			upstreamCommit = commit
+		}
+
 		if strings.HasPrefix(commit.Message, fixupPrefix) || strings.HasPrefix(commit.Message, squashPrefix) {
 			messageWithoutPrefix := commitTitle(trimPrefix(commit.Message))
 			autosquashCommitMessages = append(autosquashCommitMessages, messageWithoutPrefix)
-		}
-
-		if matchesAutosquashCommit(commit, autosquashCommitMessages) {
-			upstreamCommit = commit
 		}
 
 		return nil
@@ -84,9 +84,9 @@ func trimPrefix(commitMessage string) string {
 	return strings.TrimLeft(trimmed, " ")
 }
 
-func matchesAutosquashCommit(commit *object.Commit, autosquashCommitMessages []string) bool {
-	for _, commitMessage := range autosquashCommitMessages {
-		if strings.Contains(commit.Message, commitMessage) {
+func matchesAutosquashCommit(commitMessage string, autosquashCommitMessages []string) bool {
+	for _, autosquashCommitMessage := range autosquashCommitMessages {
+		if strings.Contains(commitMessage, autosquashCommitMessage) {
 			return true
 		}
 	}
